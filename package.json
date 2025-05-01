@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/avirup-ghosal/DriveHive/issues"
   },
-  "homepage": "https://github.com/avirup-ghosal/DriveHive#readme"
+  "homepage": "https://github.com/avirup-ghosal/DriveHive#readme",
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.9.6"
+  }
 }

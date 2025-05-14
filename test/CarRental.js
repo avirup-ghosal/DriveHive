@@ -22,7 +22,7 @@ describe("Add user and car",()=>{
         const car=await await carRentalPlatform.getCar(1);
         assert.equal(car.name,"BMW M3","Incorrect car name");
         assert.equal(car.imgUrl,"dummy url","Incorrect img url");
-        assert.eual(car.rentFee,10,"Incorrect rent fee");
+        assert.equal(car.rentFee,10,"Incorrect rent fee");
         assert.equal(car.saleFee,50000,"Incorrect sale fee");
     })
 });
@@ -40,7 +40,7 @@ describe("Check out and check in car",()=>{
         await carRentalPlatform.addCar("BMW M3","dummy url",10,50000,{from:owner});
         await carRentalPlatform.checkOut(1,{from:renter1});
         await new Promise((resolve)=>setTimeout(resolve,60000)); //1 minute
-        await carRentalPlatform.checkIn({from: user1});
+        await carRentalPlatform.checkIn({from: renter1});
 
         const user=await carRentalPlatform.getUser(renter1);
 
@@ -64,7 +64,7 @@ describe("Deposit token and make payment",()=>{
         await new Promise((resolve) => setTimeout(resolve, 60000)); // 1 minute
         await carRentalPlatform.checkIn({from: renter1})
 
-        await carRentalPlatform.deposit({from: user1,value:100});
+        await carRentalPlatform.deposit({from: renter1,value:100});
         await carRentalPlatform.makePayment({from: renter1});
 
         const user = await carRentalPlatform.getUser(renter1);
@@ -86,8 +86,8 @@ describe("edit car",()=>{
         const car=await carRentalPlatform.getCar(1);
         assert.equal(car.name,newName,"Problem editing car name");
         assert.equal(car.imgUrl,newImgUrl,"Problem editing img url");
-        assert.equal(car.name,newRentFee,"Problem editing rent fee");
-        assert.equal(car.name,newSaleFee,"Problem with editing sale fee");
+        assert.equal(car.rentFee,newRentFee,"Problem editing rent fee");
+        assert.equal(car.saleFee,newSaleFee,"Problem with editing sale fee");
     });
 
     it("should edit an existing car's status",async()=>{
@@ -97,5 +97,36 @@ describe("edit car",()=>{
         const car=await carRentalPlatform.getCar(1);
         assert.equal(car.status,newStatus,"Problem with editing car status");
     })
+})
+
+describe("Withdraw balance",()=>{
+    it("should send the desired amount of tokens to the user",async()=>{
+        await carRentalPlatform.addUser("Alice","Smith",{from:renter1});
+        await carRentalPlatform.deposit({from:renter1,value:100});
+        await carRentalPlatform.withdrawBalance(50,{from:renter1});
+
+        const user=await carRentalPlatform.getUser(renter1);
+        assert.equal(user.balance,50,"User could not get their tokens");
+    })
+
+    it("should send the desired amount of tokens to the owner", async()=>{
+        await carRentalPlatform.addUser("Adrian","Walker",{from:renter1});
+        await carRentalPlatform.addCar("BMW M3","dummy url",10,50000,{from:owner});
+        await carRentalPlatform.checkOut(1,{from:renter1});
+        await new Promise((resolve)=>setTimeout(resolve,60000)); //1 minute
+        await carRentalPlatform.checkIn({from:renter1});
+        await carRentalPlatform.deposit({from:renter1,value:1000});
+        await carRentalPlatform.makePayment({from:renter1});
+
+        const totalPaymentAmount= await carRentalPlatform.getTotalPayments({from: owner});
+        const amountToWithdraw=totalPaymentAmount - 10;
+        await carRentalPlatform.withdrawOwnerBalance(amountToWithdraw,{from: owner});
+        const totalPayment=await carRentalPlatform.getTotalPayments({from:owner});
+        assert.equal(totalPayment,10,"Owner could not withdraw tokens");
+
+
+    })
+
+
 })
 });

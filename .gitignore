@@ -10,7 +10,9 @@ build/
 *.abi
 *.bin
 *.json
-
+# But don't ignore ABI JSON files in client/src/ABI/
+!client/src/ABI/
+!client/src/ABI/*.json
 # Environment variables
 .env
 .env.local

@@ -100,3 +100,27 @@ export const editCarStatus=async(id,status)=>{
     }
 
 }
+
+export const checkOut=async (id)=>{
+    if(!isInitialized){
+        await init();
+    }
+    try{
+        let res=await renterContract.methods.checkOut(id).send({from:selectedAccount}); 
+        return res;
+    }catch(e){
+        console.error("Error checking out car: ", e);   
+    }
+};
+
+export const checkIn=async ()=>{
+    if(!isInitialized){
+        await init();
+    }
+    try{
+        let res=await renterContract.methods.checkIn().send({from:selectedAccount}); 
+        return res;
+    }catch(e){
+        console.error("Error checking in car: ", e);   
+    }
+}

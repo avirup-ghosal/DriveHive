@@ -65,3 +65,38 @@ export const register=async (name,surname)=>{
     }
 };
 
+export const addCar=async (name,url,rentFee,saleFee)=>{
+    if(!isInitialized){
+        await init();
+    }
+    try{
+        let res=await Contract.methods.addCar(name,url,rentFee,saleFee).send({from:selectedAccount});
+        return res;
+    }catch(e){
+        console.error("Error adding car: ", e);
+    }
+}
+
+export const editCarMetadata=async(id,name,imgUrl,rentFee,saleFee)=>{
+    if(!isInitialized){
+        await init();
+    }
+    try{
+        let res=await Contract.methods.editCarMetadata(id,name,imgUrl,rentFee,saleFee).send({from:selectedAccount});
+        return res;
+    }catch(e){
+        console.error("Error editing car metadata: ", e);
+    }
+}
+export const editCarStatus=async(id,status)=>{
+    if(!isInitialized){
+        await init();
+    }
+    try{
+        let res=await Contract.methods.editCarStatus(id,status).send({from:selectedAccount});
+        return res;
+    }catch(e){
+        console.error("Error editing car status: ", e);
+    }
+
+}

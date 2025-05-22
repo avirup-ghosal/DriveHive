@@ -185,3 +185,50 @@ export const getOwner=async()=>{
     }   
 }
 
+export const login=async()=>{
+    if(!isInitialized){
+        await init();
+    }
+    try{
+        let res=await Contract.methods.getUser(selectedAccount).call();
+        return res;
+    }catch(e){
+        console.error("Error logging in: ", e);
+    }
+}
+
+export const getCar=async(id)=>{
+    if(!isInitialized){
+        await init();
+    }
+    try{
+        let res=await Contract.methods.getCar(id).call();
+        return res;
+    }catch(e){
+        console.error("Error getting car: ", e);
+    }
+}
+
+export const getCarByStatus=async(status)=>{
+    if(!isInitialized){
+        await init();
+    }
+    try{
+        let res=await Contract.methods.getCarByStatus(status).call();
+        return res;
+    }catch(e){
+        console.error("Error getting car by status: ", e);
+    }
+}
+
+export const getCurrentCount=async()=>{
+    if(!isInitialized){
+        await init();
+    }
+    try{
+        let res=await Contract.methods.getCurrentCount().call();
+        return res;
+    }catch(e){
+        console.error("Error getting current count: ", e);
+    }
+};

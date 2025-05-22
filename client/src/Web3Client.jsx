@@ -42,7 +42,7 @@ export const getUserAddress=async ()=>{
 }
 
 export const setOwner=async(newOwner)=>{
-    if(!isInitiazed){
+    if(!isInitialized){
         await init();
     }
     try{
@@ -106,7 +106,7 @@ export const checkOut=async (id)=>{
         await init();
     }
     try{
-        let res=await renterContract.methods.checkOut(id).send({from:selectedAccount}); 
+        let res=await Contract.methods.checkOut(id).send({from:selectedAccount}); 
         return res;
     }catch(e){
         console.error("Error checking out car: ", e);   
@@ -118,7 +118,7 @@ export const checkIn=async ()=>{
         await init();
     }
     try{
-        let res=await renterContract.methods.checkIn().send({from:selectedAccount}); 
+        let res=await Contract.methods.checkIn().send({from:selectedAccount}); 
         return res;
     }catch(e){
         console.error("Error checking in car: ", e);   
@@ -130,7 +130,7 @@ export const deposit=async ()=>{
         await init();
     }
     try{
-        let res=await renterContract.methods.deposit().send({from:selectedAccount, value: send_value}); 
+        let res=await Contract.methods.deposit().send({from:selectedAccount, value: send_value}); 
         return res;
     }catch(e){
         console.error("Error depositing: ", e);
@@ -141,7 +141,7 @@ export const makePayment=async()=>{
         await init();
     }
     try{
-        let res=await renterContract.methods.makePayment().send({from:selectedAccount}); 
+        let res=await Contract.methods.makePayment().send({from:selectedAccount}); 
         return res;
     }catch(e){
         console.error("Error making payment: ", e);
@@ -154,7 +154,7 @@ export const withdrawBalance=async(value)=>{
     }
     let send_value=Web3.utils.toWei(value, "ether");
     try{
-        let res=await renterContract.methods.withdrawBalance(send_value).send({from:selectedAccount}); 
+        let res=await Contract.methods.withdrawBalance(send_value).send({from:selectedAccount}); 
         return res;
     }catch(e){
         console.error("Error withdrawing balance: ", e);
@@ -166,7 +166,7 @@ export const withdrawOwnerBalance=async(value)=>{
     }
     let send_value=Web3.utils.toWei(value, "ether");
     try{
-        let res=await renterContract.methods.withdrawOwnerBalance(send_value).send({from:selectedAccount}); 
+        let res=await Contract.methods.withdrawOwnerBalance(send_value).send({from:selectedAccount}); 
         return res;
     }catch(e){
         console.error("Error withdrawing owner balance: ", e);
@@ -232,3 +232,27 @@ export const getCurrentCount=async()=>{
         console.error("Error getting current count: ", e);
     }
 };
+
+export const getContractBalance=async()=>{
+    if(!isInitialized){
+        await init();
+    }
+    try{
+        let res=await Contract.methods.getContractBalance().call({from:selectedAccount});
+        return res;
+    }catch(e){
+        console.error("Error getting contract balance: ", e);
+    }
+}
+
+export const getTotalPayments=async()=>{    
+    if(!isInitialized){
+        await init();
+    }
+    try{
+        let res=await Contract.methods.getTotalPayments().call({from:selectedAccount});
+        return res;
+    }catch(e){
+        console.error("Error getting total payments: ", e);
+    }
+}

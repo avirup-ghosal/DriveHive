@@ -125,7 +125,7 @@ export const checkIn=async ()=>{
     }
 }
 
-export const deposit=async ()=>{
+export const deposit=async (send_value)=>{
     if(!isInitialized){
         await init();
     }
